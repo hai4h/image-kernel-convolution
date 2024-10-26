@@ -26,8 +26,8 @@ int main() {
 
     // create a black image with the size of grayImage and apply Gaussian blur
     cv::Mat blurredImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    applyGaussianBlur(grayImage, blurredImage);
-
+    //applyGaussianBlur(grayImage, blurredImage);
+    applyStatisticalFilter(grayImage, blurredImage);
     // create a black image with the size of grayImage and apply Sobel filter
     cv::Mat sobelImage = cv::Mat::zeros(grayImage.size(), CV_8U);
     applySobel(blurredImage, sobelImage);

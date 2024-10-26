@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <omp.h>
 
+
 void applySobel(const cv::Mat& grayImage, cv::Mat& sobelImage);
 void applyPrewitt(const cv::Mat grayImage, cv::Mat prewittImage);
 void applyLaplacian(const cv::Mat grayImage, cv::Mat laplacianImage);
@@ -12,5 +13,6 @@ void applyCanny(const cv::Mat grayImage, cv::Mat cannyImage);
 void nonMaximumSuppression(const cv::Mat& sobelImage, cv::Mat& nmsImage);
 void doubleThreshold(const cv::Mat sobelImage, cv::Mat dtImage);
 void edgeTracking(const cv::Mat& dtImage, cv::Mat& etImage);
+void applyStatisticalFilter(const cv::Mat& inputImage , cv::Mat& outputImage);
 
 #endif
