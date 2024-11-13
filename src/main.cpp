@@ -17,58 +17,47 @@ int main() {
     cv::Mat grayImage;
     cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
 
-    // // create a black image with the size of grayImage and apply Laplacian filter
-    // cv::Mat laplacianImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // applyLaplacian(grayImage, laplacianImage);
-
     double itime, ftime, exec_time;
     itime = omp_get_wtime();
-
-    // create a black image with the size of grayImage and apply Gaussian blur
-    // cv::Mat blurredImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // applyGaussianBlur(grayImage, blurredImage);
-
-    // create a black image with the size of grayImage and apply Sobel filter
-    // cv::Mat sobelImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // applySobel(blurredImage, sobelImage);
-
-    // create a black image with the size of grayImage and apply Canny filter
-    // cv::Mat cannyImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // applyCanny(blurredImage, cannyImage);
-
-    // create a black image with the size of grayImage and apply non-maximum suppression
-    // cv::Mat nmsImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // nonMaximumSuppression(sobelImage, nmsImage);
-
-    // create a black image with the size of grayImage and apply double threshold
-    // cv::Mat dtImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // doubleThreshold(nmsImage, dtImage);
-    
-    // create a black image with the size of grayImage and apply edge tracking
-    // cv::Mat etImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // edgeTracking(nmsImage, etImage);
-
-    // create a black image with the size of grayImage and apply Sobel filter then double threshold
-    // cv::Mat sobelImage = cv::Mat::zeros(grayImage.size(), CV_8U);
-    // applySobel(grayImage, sobelImage);
-    // doubleThreshold(sobelImage, sobelImage);
 
     // all-in-one edge filtering
     cv::Mat outputImage = cv::Mat::zeros(grayImage.size(), CV_8U);
     edgeFilter(grayImage, outputImage);
 
-
     ftime = omp_get_wtime();
     exec_time = ftime - itime;
     printf("\n\nTime taken is %f", exec_time);
 
-    // Set the display window name
-    std::string window_name = "test display";
+    // Create a combined image to display both images side by side
+    cv::Mat combinedImage;
+    
+    // Convert output image to 3 channels to match the original image
+    cv::Mat outputImage3C;
+    cv::cvtColor(outputImage, outputImage3C, cv::COLOR_GRAY2BGR);
+    
+    // Concatenate images horizontally
+    cv::hconcat(image, outputImage3C, combinedImage);
 
-    // Display the image
+    // Set the display window name
+    std::string window_name = "Original vs Processed Image";
+
+    // Display the combined image
     cv::namedWindow(window_name, cv::WINDOW_NORMAL);
-    cv::resizeWindow(window_name, 1024, 1024);
-    cv::imshow(window_name, outputImage);
+    cv::resizeWindow(window_name, 2048, 1024); // Double the width to accommodate both images
+    cv::imshow(window_name, combinedImage);
+
+    // Add labels to the window
+    int baseline = 0;
+    cv::Size textSize = cv::getTextSize("Original Image", cv::FONT_HERSHEY_SIMPLEX, 1, 2, &baseline);
+    
+    // Draw labels on the combined image
+    cv::putText(combinedImage, "Original Image", 
+                cv::Point(image.cols/2 - textSize.width/2, 30),
+                cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+    
+    cv::putText(combinedImage, "Processed Image", 
+                cv::Point(image.cols + image.cols/2 - textSize.width/2, 30),
+                cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
 
     // wait for key press indefinitely
     cv::waitKey(0);
