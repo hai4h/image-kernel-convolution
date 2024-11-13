@@ -25,6 +25,8 @@
 *.la
 *.a
 *.lib
+*.bin
+*.include
 
 .vscode/
 
@@ -32,3 +34,5 @@
 *.exe
 *.out
 *.app
+
+
